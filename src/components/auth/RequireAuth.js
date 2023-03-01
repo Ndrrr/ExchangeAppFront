@@ -11,7 +11,7 @@ const RequireAuth = ({allowedRoles}) => {
              ? <Outlet/>
              // user is authenticated but wants to go login/register
              : <Navigate to="/landing" replace={true}/>
-           : allowedRoles?.includes("Authenticated")
+           : allowedRoles?.includes("Authenticated") && tokenData
                 // user is authorized for requested page
              ? <Outlet/>
              : tokenData

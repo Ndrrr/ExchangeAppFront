@@ -16,7 +16,7 @@ import twitterIcon from "../../././images/twitter.svg";
 
 const cookies = new Cookies();
 
-export const Login = () => {
+export const Login = (loginChecker) => {
   const {setAuth} = useAuth();
 
   const navigate = useNavigate();
@@ -35,12 +35,14 @@ export const Login = () => {
       password
     }).then((response) => {
       if (response.status === 200) {
+        loginChecker.setNewLogin(true)
         let accessToken = response?.data?.token;
         setAuth({accessToken});
         cookies.set('accessToken', accessToken, {path: '/'});
+        cookies.set('fullName', response?.data?.fullName, {path: '/'});
         navigate(from, {replace: true});
       } else {
-        setError('Invalid credentials');
+        setError('Invalid credentials 1');
       }
     }).catch(() => {
       setError('Invalid credentials');

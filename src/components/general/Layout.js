@@ -1,10 +1,11 @@
 import {Outlet} from "react-router-dom";
+import {Header} from "./Header";
 
-export const Layout = () => {
+export const Layout = (funs) => {
   return (
     <div>
       {
-        // <Navbar />
+        <Header funs={funs}/>
       }
       <main className="App">
         <Outlet/>

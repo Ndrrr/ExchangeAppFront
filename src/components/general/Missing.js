@@ -7,10 +7,11 @@ export const Missing = () => {
 
   return (
       <section>
+        <br/>
         <h1>Missing</h1>
         <br/>
         <p>Resource is not found</p>
-        <button onClick={goBack}>Go Back</button>
+        <button className="btn btn-danger" onClick={goBack}>Go Back</button>
       </section>
   )
 }

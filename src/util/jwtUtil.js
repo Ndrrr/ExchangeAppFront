@@ -32,8 +32,9 @@ export const setAccessToken = async (accessToken) => {
   cookies.set('accessToken', accessToken, { path: '/' });
 }
 
-export const removeAccessToken = async () => {
+export const removeCookies = async () => {
   cookies.remove('accessToken', { path: '/' });
+  cookies.remove('fullName', { path: '/' });
 }
 
 export const getRole = () => {
@@ -48,7 +49,7 @@ export const removeTokenIfExpired = async () => {
   const token = getAccessToken();
   if (token) {
     if (isTokenExpired(token)) {
-      await removeAccessToken();
+      await removeCookies();
     }
   }
 }
