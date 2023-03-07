@@ -17,6 +17,7 @@ export const Register = () => {
 
   const [passwordError, setPasswordError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [error, setError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
 
   const [navigate, setNavigate] = useState(false);
@@ -38,7 +39,7 @@ export const Register = () => {
         if (error.request.status === 500) {
           setEmailError('User with this email already exists');
         } else {
-          setEmailError('Something went wrong');
+          setError('Something went wrong');
         }
       });
       //setNavigate(true);
@@ -145,6 +146,7 @@ export const Register = () => {
             </div>
             <input type="submit" value="Create account" className="registration-section-container-form-submit"/>
           </form>
+          <p className="text-danger">{error}</p>
         </div>
       </section>
     </div>

@@ -122,7 +122,6 @@ export const ResetPassword = () => {
 
             <div className="reset-section-form-buttons">
               <button onClick={onSubmit} className="reset-section-container-form-login">Reset Password</button>
-              <Link to="/register" className="reset-section-container-form-signup">Create account</Link>
             </div>
             <span className="go-back-text">Go back to <Link to="/login" className="go-back-link">Login</Link></span>
             <p className={'text-success'}>{success}</p>
