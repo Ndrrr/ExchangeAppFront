@@ -12,8 +12,8 @@ import "../styles/main-page.css"
 export const ExchangeBetter = () => {
 
   const [load, setLoad] = useState(false);
-  const [fromCurrency, setFromCurrency] = useState('USD')
-  const [toCurrency, setToCurrency] = useState('USD')
+  const [fromCurrency, setFromCurrency] = useState('AED')
+  const [toCurrency, setToCurrency] = useState('AED')
   const [fromValue, setFromValue] = useState(0)
   const [toValue, setToValue] = useState(0)
   const [exchangeRate, setExchangeRate] = useState(1)
@@ -39,17 +39,24 @@ export const ExchangeBetter = () => {
   })
 
   const loadCurrencies = async () => {
-    setCurrencyData([
-      {text: 'American Dollar', value: 'USD'},
-      {text: 'Euro', value: 'EUR'},
-      {text: 'British Pound', value: 'GBP'},
-    ])
+    const currencies = (await axios.get("api/exchange/currencies", {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    })).data.currencies;
+
+    console.log(currencies)
+
+    setCurrencyData(currencies.map((currency) => {
+      return {text: currency.name, value: currency.code}
+    }))
   }
 
-  const buildCurrencySelectList = () => {
+  const buildCurrencySelectList = (keyid) => {
+    if(load === false) return (<option>Loading...</option>)
     return currencyData.map((currency) => {
       return (
-        <option className={"dropdown-item"} key={`${currency.value}-key`}>{currency.value}</option>
+          <option className={"dropdown-item"} key={`${currency.value}-key-${keyid}`}>{currency.value}</option>
       )
     })
   }
@@ -77,6 +84,7 @@ export const ExchangeBetter = () => {
     console.log(excRate)
     console.log(excRate.data.rates[to])
     setExchangeRate(excRate.data.rates[to])
+    onFromValueChange({target: {value: fromValueMain}})
   }
 
   const onFromValueChange = (e) => {
@@ -86,21 +94,8 @@ export const ExchangeBetter = () => {
     }
     let val = Number(e.target.value)
     setFromValueMain(val)
+    setToValue(Number((val * exchangeRate).toFixed(1)))
     setToValueMain(val * exchangeRate)
-  }
-
-  const onToValueChange = (e) => {
-    setToValue(e.target.value)
-    if (isNaN(e.target.value)) {
-      return
-    }
-    let val = Number(e.target.value)
-    setToValueMain(val)
-    if (exchangeRate === 0) {
-      setFromValueMain(0)
-      return
-    }
-    setFromValueMain(val / exchangeRate)
   }
 
   return (
@@ -119,7 +114,7 @@ export const ExchangeBetter = () => {
                         </span>
               <select id="exchange-from" className="show dropdown-menu dropdown-menu-dark"
                       onChange={onFromCurrencyChange}>
-                {buildCurrencySelectList()}
+                {buildCurrencySelectList(3)}
               </select>
               <div id="exchange-from-result" className="exchange-result">
                 <span className="exchange-result-currency">{fromCurrency}</span>
@@ -141,11 +136,10 @@ export const ExchangeBetter = () => {
                         </span>
               <select id="exchange-to" className="show dropdown-menu dropdown-menu-dark exchange-select-to"
                       onChange={onToCurrencyChange}>
-                {buildCurrencySelectList()}
+                {buildCurrencySelectList(4)}
               </select>
               <div id="exchange-to-result" className="exchange-result">
-                <input type="text" className="currency-input text-sm-end" placeholder="0" value={toValue}
-                       onChange={onToValueChange}/>
+                <input type="text" className="currency-input text-sm-end" placeholder="0" value={toValue}/>
                 <span className="exchange-result-currency">{toCurrency}</span>
               </div>
               <div className="datepicker-wrapper">

@@ -216,6 +216,9 @@ body {
   min-height: 200px;
   outline-color: #bdbdbd;
 }
+.currency-input:focus, input:focus{
+  outline: none;
+}
 
 .form-footer {
   display: flex;

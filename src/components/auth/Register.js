@@ -15,6 +15,7 @@ export const Register = () => {
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
 
+  const [nameError, setNameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [error, setError] = useState('');
@@ -25,7 +26,10 @@ export const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (passwordError === '' && emailError === '' && passwordConfirmError === '') {
+    if (nameError === '' &&
+        passwordError === '' &&
+        emailError === '' &&
+        passwordConfirmError === '') {
       await axios.post('api/auth/register', {
         fullName,
         email,
@@ -36,7 +40,7 @@ export const Register = () => {
         }
       }).catch((error) => {
         console.log(error);
-        if (error.request.status === 500) {
+        if (error.response.data.code === 'USER_ALREADY_EXISTS') {
           setEmailError('User with this email already exists');
         } else {
           setError('Something went wrong');
@@ -47,6 +51,15 @@ export const Register = () => {
   }
   if (navigate) {
     return <Navigate to="/login"/>
+  }
+
+  const onFullNameChange = async (e) => {
+    setFullName(e.target.value);
+    if(e.target.value.length < 3) {
+      setNameError('Name must be at least 3 characters');
+    } else {
+      setNameError('')
+    }
   }
 
   const onEmailChange = async (e) => {
@@ -119,7 +132,8 @@ export const Register = () => {
               <img src={userIcon} alt="User Icon"/>
               <label htmlFor="full-name"></label>
               <input className="registration-section-container-form-input" id="full-name" placeholder="Full name"
-                     type="text" onChange={e => setFullName(e.target.value)}/>
+                     type="text" onChange={onFullNameChange}/>
+                <p className={'text-danger'}>{nameError}</p>
             </div>
             <div className="registration-section-container-form-input-wrapper">
               <img src={mailIcon} alt="User Icon"/>
